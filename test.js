@@ -12,4 +12,5 @@ function bar() {
     foo.blah();
     var f = sap.fpa.ui.Moo.stuff();
     serv2.test();
+    sap.fpa.ui.George.blah();
 }
