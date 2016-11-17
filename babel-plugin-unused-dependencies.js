@@ -30,6 +30,13 @@ module.exports = function(babel) {
                 //     console.log("yeah member expr!");
                 }
             }
+        },
+        MemberExpression: function(path) {
+            if (t.isMemberExpression(path.parent)) {
+                return;
+            }
+
+            console.log("--------- member expr without parent", path.node.property.name);
         }
     }
   };

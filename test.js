@@ -10,6 +10,6 @@ jQuery.sap.require("sap.fpa.ui.Bar");
 
 function bar() {
     foo.blah();
-    var f = sap.fpa.ui.Moo();
+    var f = sap.fpa.ui.Moo.stuff();
     serv2.test();
 }
