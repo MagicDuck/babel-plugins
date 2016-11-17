@@ -5,24 +5,18 @@ var util = require('util');
 var codeFrame = require('babel-code-frame');
 
 module.exports = function(babel) {
-  var t = babel.types; // docs: https://github.com/babel/babel/tree/master/packages/babel-types#babel-types
+    var t = babel.types; // docs: https://github.com/babel/babel/tree/master/packages/babel-types#babel-types
+
+    var get_service_expr_names = "sap.bi.framework.getService".split(".");
+
   return {
     visitor: {
-      // callexpression: function(path) {
-      //     if (path.node.callee.name !== "require") {
-      //         console.log(util.inspect(path, false, 2, true));
-      //     } else {
-      //         return;
-      //     }
-      //         //throw path.buildcodeframeerror("require found!");
-      //         // throw path.buildcodeframeerror("error message here");
-      // }
         VariableDeclarator: function(path) {
             var node = path.node;
-            // TODO: use babel.types?
             if (t.isCallExpression(node.init)) {
                 var callee = node.init.callee;
-                if (t.isIdentifier(callee, {name: "require"})) {
+                if (t.isIdentifier(callee, {name: "require"}) ||
+                    isDotMemberExpr(callee, get_service_expr_names)) {
                     // console.log(path.node.id.name, "\n\n", util.inspect(path.scope.getBinding(path.node.id.name), false, 2, true));
                     if (!path.scope.getBinding(node.id.name).referenced) {
                         // throw path.buildCodeFrameError("unused dependency!");
@@ -32,9 +26,32 @@ module.exports = function(babel) {
                             startLoc.line, startLoc.column + 1, { highlightCode: true }));
                     }
 
+                // } else if (isDotMemberExpr(callee, get_service_expr_names)) {
+                //     console.log("yeah member expr!");
                 }
             }
         }
     }
   };
+
+    function isDotMemberExpr(expr, exprNames) {
+        debugger;
+        var subExpr = expr;
+        var len = exprNames.length;
+        for (var i = len - 1; i > 0; --i) {
+            if (!(t.isMemberExpression(subExpr) &&
+                  t.isIdentifier(subExpr.property) &&
+                  subExpr.property.name === exprNames[i]
+                 )) {
+                return false;
+            }
+            subExpr = subExpr.object;
+        }
+
+        if (!(t.isIdentifier(subExpr) && subExpr.name === exprNames[0])) {
+            return false;
+        }
+
+        return true;
+    }
 };
