@@ -1,0 +1,15 @@
+{
+  "name": "babel-plugins",
+  "version": "0.0.0",
+  "description": "",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "babel-core": "~6.18.2",
+    "babel-code-frame": "~6.16.0"
+  }
+}
