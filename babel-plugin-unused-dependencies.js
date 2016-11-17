@@ -20,17 +20,18 @@ module.exports = function(babel) {
         VariableDeclarator: function(path) {
             var node = path.node;
             // TODO: use babel.types?
-            if (node.init.type === "CallExpression") {
-                let callee = node.init.callee;
-                if (callee.)
-                node.init.callee.name === "require") {
-                // console.log(path.node.id.name, "\n\n", util.inspect(path.scope.getBinding(path.node.id.name), false, 2, true));
-                if (!path.scope.getBinding(node.id.name).referenced) {
-                    // throw path.buildCodeFrameError("unused dependency!");
-                    var startLoc = node.loc.start;
-                    console.log("Warning! Unused dependency:");
-                    console.log(codeFrame(path.hub.file.code,
-                        startLoc.line, startLoc.column + 1, { highlightCode: true }));
+            if (t.isCallExpression(node.init)) {
+                var callee = node.init.callee;
+                if (t.isIdentifier(callee, {name: "require"})) {
+                    // console.log(path.node.id.name, "\n\n", util.inspect(path.scope.getBinding(path.node.id.name), false, 2, true));
+                    if (!path.scope.getBinding(node.id.name).referenced) {
+                        // throw path.buildCodeFrameError("unused dependency!");
+                        var startLoc = node.loc.start;
+                        console.log("Warning! Unused dependency:");
+                        console.log(codeFrame(path.hub.file.code,
+                            startLoc.line, startLoc.column + 1, { highlightCode: true }));
+                    }
+
                 }
             }
         }
